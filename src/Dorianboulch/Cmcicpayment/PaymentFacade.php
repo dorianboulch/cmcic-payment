@@ -6,6 +6,6 @@ use Illuminate\Support\Facades\Facade;
 
 class PaymentFacade extends Facade {
 
-  protected static function getFacadeAccessor(){ return 'Dorianboulch\PaymentInterface'; }
+  protected static function getFacadeAccessor(){ return 'PaymentInterface'; }
 
 }
