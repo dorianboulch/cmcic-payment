@@ -14,6 +14,9 @@
     "autoload": {
         "psr-0": {
             "Dorianboulch\\Cmcicpayment\\": "src/"
-        }
+        },
+        "files": [
+            "src/helpers.php"
+        ]
     }
 }

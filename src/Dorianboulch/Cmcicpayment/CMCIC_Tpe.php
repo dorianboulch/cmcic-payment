@@ -26,7 +26,7 @@ class CMCIC_Tpe {
   function __construct(Array $parameters, $sLangue = 'FR') {
 
     // contrôle de l'existence des constantes de paramétrages.
-    $aRequiredDatas = array('CMCIC_CLE', 'CMCIC_VERSION', 'CMCIC_TPE', 'CMCIC_CODESOCIETE');
+    $aRequiredDatas = array('CLE', 'VERSION', 'TPE', 'CODESOCIETE');
     $this->_checkTpeParams($aRequiredDatas,$parameters);
 
     $this->sVersion     = $parameters['VERSION'];
@@ -64,10 +64,10 @@ class CMCIC_Tpe {
   //
   // ----------------------------------------------------------------------------
 
-  private function _checkTpeParams($aConstants) {
+  private function _checkTpeParams($aConstants, $parameters) {
 
     for ($i = 0; $i < count($aConstants); $i++)
-      if (!array_key_exists($aConstants[$i],$aConstants))
+      if (!array_key_exists($aConstants[$i],$parameters))
         die ("Erreur paramètre " . $aConstants[$i] . " indéfini");
   }
 

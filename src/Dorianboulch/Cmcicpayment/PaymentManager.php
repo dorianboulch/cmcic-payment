@@ -39,8 +39,8 @@ class PaymentManager implements PaymentInterface {
   private $sMac;
 
   public function create(Array $param) {
-    $configCmcic = $this->app['config']['cmcic']['CMCIC'];
-    $configTpe   = $this->app['config']['cmcic']['TPE'];
+    $configCmcic = app()['config']['cmcic']['CMCIC'];
+    $configTpe   = app()['config']['cmcic']['TPE'];
 
     $this->oTpe  = new CMCIC_Tpe($configTpe);
     $this->oHmac = new CMCIC_Hmac($this->oTpe);
@@ -49,23 +49,23 @@ class PaymentManager implements PaymentInterface {
 
     $this->sReference  = $param['reference'];
     $this->sMontant    = $param['montant'];
-    $this->sDevise     = ($param['devise']) ? $param['devise'] : 'EUR';
+    $this->sDevise     = isset($param['devise']) ? $param['devise'] : 'EUR';
     $this->sTexteLibre = $param['texte'];
-    $this->sDate       = ($param['date']) ? $param['date'] : date("d/m/Y:H:i:s");
-    $this->sLangue     = ($param['langue']) ? $param['langue'] : 'FR';
+    $this->sDate       = isset($param['date']) ? $param['date'] : date("d/m/Y:H:i:s");
+    $this->sLangue     = isset($param['langue']) ? $param['langue'] : 'FR';
     $this->sEmail      = $param['email'];
 
-    $this->sNbrEch           = ($param['nbrEch']) ? $param['nbrEch'] : '';
-    $this->sDateEcheance1    = ($param['dateEch1']) ? $param['dateEch1'] : '';
-    $this->sMontantEcheance1 = ($param['montantEch1']) ? $param['montantEch1'] : '';
-    $this->sDateEcheance2    = ($param['dateEch2']) ? $param['dateEch2'] : '';
-    $this->sMontantEcheance2 = ($param['montantEch2']) ? $param['montantEch2'] : '';
-    $this->sDateEcheance3    = ($param['dateEch3']) ? $param['dateEch3'] : '';
-    $this->sMontantEcheance3 = ($param['montantEch3']) ? $param['montantEch3'] : '';
-    $this->sDateEcheance4    = ($param['dateEch4']) ? $param['dateEch4'] : '';
-    $this->sMontantEcheance4 = ($param['montantEch4']) ? $param['montantEch4'] : '';
+    $this->sNbrEch           = isset($param['nbrEch']) ? $param['nbrEch'] : '';
+    $this->sDateEcheance1    = isset($param['dateEch1']) ? $param['dateEch1'] : '';
+    $this->sMontantEcheance1 = isset($param['montantEch1']) ? $param['montantEch1'] : '';
+    $this->sDateEcheance2    = isset($param['dateEch2']) ? $param['dateEch2'] : '';
+    $this->sMontantEcheance2 = isset($param['montantEch2']) ? $param['montantEch2'] : '';
+    $this->sDateEcheance3    = isset($param['dateEch3']) ? $param['dateEch3'] : '';
+    $this->sMontantEcheance3 = isset($param['montantEch3']) ? $param['montantEch3'] : '';
+    $this->sDateEcheance4    = isset($param['dateEch4']) ? $param['dateEch4'] : '';
+    $this->sMontantEcheance4 = isset($param['montantEch4']) ? $param['montantEch4'] : '';
 
-    $this->sOptions = ($param['options']) ? $param['options'] : '';
+    $this->sOptions = isset($param['options']) ? $param['options'] : '';
 
     $CtlHmac = sprintf($this->cmcicCtlHmac, $this->oTpe->sVersion, $this->oTpe->sNumero, $this->oHmac->computeHmac(sprintf($this->cmcicCtlHmacStr, $this->oTpe->sVersion, $this->oTpe->sNumero)));
 
@@ -102,7 +102,7 @@ class PaymentManager implements PaymentInterface {
 
   private function checkPaymentParams(Array $params){
     $aRequiredDatas = array('reference', 'montant', 'texte', 'email');
-    for ($i = 0; $i < count($params); $i++)
+    for ($i = 0; $i < count($aRequiredDatas); $i++)
       if (!array_key_exists($aRequiredDatas[$i], $params))
         die ("Erreur paramètre " . $aRequiredDatas[$i] . " indéfini");
   }
@@ -121,7 +121,7 @@ class PaymentManager implements PaymentInterface {
             <input type="hidden" name="url_retour_err"      id="url_retour_err" value="'.$this->oTpe->sUrlKO.'" />
             <input type="hidden" name="lgue"                id="lgue"           value="'.$this->oTpe->sLangue.'" />
             <input type="hidden" name="societe"             id="societe"        value="'.$this->oTpe->sCodeSociete.'" />
-            <input type="hidden" name="texte-libre"         id="texte-libre"    value="'.HtmlEncode($this->sTexteLibre).'" />
+            <input type="hidden" name="texte-libre"         id="texte-libre"    value="'.htmlEncode($this->sTexteLibre).'" />
             <input type="hidden" name="mail"                id="mail"           value="'.$this->sEmail.'" />';
       if($this->sNbrEch != ''){
           $html .= '
@@ -135,9 +135,9 @@ class PaymentManager implements PaymentInterface {
             <input type="hidden" name="dateech4"            id="dateech4"       value="'.$this->sDateEcheance4.' />
             <input type="hidden" name="montantech4"         id="montantech4"    value="'.$this->sMontantEcheance4.'" />
             <!-- -->
-            <input type="submit" name="bouton"              id="bouton"         value="Connexion / Connection" />';
+            <input type="submit" name="bouton"              id="bouton"         value="Connexion / Connection" />
+        </form>';
       }
-      $html .= '</form>';
     return $html;
   }
 }
