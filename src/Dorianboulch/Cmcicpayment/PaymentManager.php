@@ -135,9 +135,9 @@ class PaymentManager implements PaymentInterface {
             <input type="hidden" name="dateech4"            id="dateech4"       value="'.$this->sDateEcheance4.' />
             <input type="hidden" name="montantech4"         id="montantech4"    value="'.$this->sMontantEcheance4.'" />
             <!-- -->
-            <input type="submit" name="bouton"              id="bouton"         value="Connexion / Connection" />
-        </form>';
+            <input type="submit" name="bouton"              id="bouton"         value="Connexion / Connection" />';
       }
+      $html .= '</form>';
     return $html;
   }
 }

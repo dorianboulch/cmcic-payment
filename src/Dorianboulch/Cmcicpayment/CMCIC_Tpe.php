@@ -29,16 +29,16 @@ class CMCIC_Tpe {
     $aRequiredDatas = array('CMCIC_CLE', 'CMCIC_VERSION', 'CMCIC_TPE', 'CMCIC_CODESOCIETE');
     $this->_checkTpeParams($aRequiredDatas,$parameters);
 
-    $this->sVersion     = $parameters['CMCIC_VERSION'];
-    $this->_sCle        = $parameters['CMCIC_CLE'];
-    $this->sNumero      = $parameters['CMCIC_TPE'];
-    $this->sUrlPaiement = $parameters['CMCIC_SERVEUR'] . $parameters['CMCIC_URLPAIEMENT'];
+    $this->sVersion     = $parameters['VERSION'];
+    $this->_sCle        = $parameters['CLE'];
+    $this->sNumero      = $parameters['TPE'];
+    $this->sUrlPaiement = $parameters['SERVEUR'] . $parameters['URLPAIEMENT'];
 
-    $this->sCodeSociete = $parameters['CMCIC_CODESOCIETE'];
+    $this->sCodeSociete = $parameters['CODESOCIETE'];
     $this->sLangue      = $sLangue;
 
-    $this->sUrlOK = $parameters['CMCIC_URLOK'];
-    $this->sUrlKO = $parameters['CMCIC_URLKO'];
+    $this->sUrlOK = $parameters['URLOK'];
+    $this->sUrlKO = $parameters['URLKO'];
 
   }
 
