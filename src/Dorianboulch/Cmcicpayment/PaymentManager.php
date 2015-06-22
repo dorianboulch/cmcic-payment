@@ -1,6 +1,8 @@
 <?php
-
 namespace Dorianboulch\Cmcicpayment;
+
+require_once('CMCIC_Tpe.php');
+require_once('CMCIC_Hmac.php');
 
 class PaymentManager implements PaymentInterface {
 
@@ -97,18 +99,14 @@ class PaymentManager implements PaymentInterface {
     // MAC computation
     $this->sMac = $this->oHmac->computeHmac($php1Fields);
 
-    return $this->generateHtmlForm();
   }
 
-  private function checkPaymentParams(Array $params){
-    $aRequiredDatas = array('reference', 'montant', 'texte', 'email');
-    for ($i = 0; $i < count($aRequiredDatas); $i++)
-      if (!array_key_exists($aRequiredDatas[$i], $params))
-        die ("Erreur paramètre " . $aRequiredDatas[$i] . " indéfini");
+  public function openForm(){
+    return '<form action="'.$this->oTpe->sUrlPaiement.'" method="POST" id="PaymentRequest">';
   }
 
-  private function generateHtmlForm(){
-    $html = '
+  public function getInputs(){
+    $inputs = '
         <form action="'.$this->oTpe->sUrlPaiement.'" method="post" id="PaymentRequest">
             <input type="hidden" name="version"             id="version"        value="'.$this->oTpe->sVersion.'" />
             <input type="hidden" name="TPE"                 id="TPE"            value="'.$this->oTpe->sNumero.'" />
@@ -116,15 +114,15 @@ class PaymentManager implements PaymentInterface {
             <input type="hidden" name="montant"             id="montant"        value="'.$this->sMontant . $this->sDevise.'" />
             <input type="hidden" name="reference"           id="reference"      value="'.$this->sReference.'" />
             <input type="hidden" name="MAC"                 id="MAC"            value="'.$this->sMac.'" />
-            <input type="hidden" name="url_retour"          id="url_retour"     value="'.$this->oTpe->sUrlKO.'" />
-            <input type="hidden" name="url_retour_ok"       id="url_retour_ok"  value="'.$this->oTpe->sUrlOK.'" />
-            <input type="hidden" name="url_retour_err"      id="url_retour_err" value="'.$this->oTpe->sUrlKO.'" />
+            <input type="hidden" name="url_retour"          id="url_retour"     value="'.route($this->oTpe->sUrlKO).'" />
+            <input type="hidden" name="url_retour_ok"       id="url_retour_ok"  value="'.route($this->oTpe->sUrlOK).'" />
+            <input type="hidden" name="url_retour_err"      id="url_retour_err" value="'.route($this->oTpe->sUrlKO).'" />
             <input type="hidden" name="lgue"                id="lgue"           value="'.$this->oTpe->sLangue.'" />
             <input type="hidden" name="societe"             id="societe"        value="'.$this->oTpe->sCodeSociete.'" />
             <input type="hidden" name="texte-libre"         id="texte-libre"    value="'.htmlEncode($this->sTexteLibre).'" />
             <input type="hidden" name="mail"                id="mail"           value="'.$this->sEmail.'" />';
-      if($this->sNbrEch != ''){
-          $html .= '
+    if($this->sNbrEch != ''){
+      $inputs .= '
             <input type="hidden" name="nbrech"              id="nbrech"         value="'.$this->sNbrEch.'" />
             <input type="hidden" name="dateech1"            id="dateech1"       value="'.$this->sDateEcheance1.' />
             <input type="hidden" name="montantech1"         id="montantech1"    value="'.$this->sMontantEcheance1.'" />
@@ -133,11 +131,19 @@ class PaymentManager implements PaymentInterface {
             <input type="hidden" name="dateech3"            id="dateech3"       value="'.$this->sDateEcheance3.' />
             <input type="hidden" name="montantech3"         id="montantech3"    value="'.$this->sMontantEcheance3.'" />
             <input type="hidden" name="dateech4"            id="dateech4"       value="'.$this->sDateEcheance4.' />
-            <input type="hidden" name="montantech4"         id="montantech4"    value="'.$this->sMontantEcheance4.'" />
-            <!-- -->
-            <input type="submit" name="bouton"              id="bouton"         value="Connexion / Connection" />
-        </form>';
-      }
-    return $html;
+            <input type="hidden" name="montantech4"         id="montantech4"    value="'.$this->sMontantEcheance4.'" />';
+    }
+    return $inputs;
+  }
+
+  public function closeForm(){
+    return '</form>';
+  }
+
+  private function checkPaymentParams(Array $params){
+    $aRequiredDatas = array('reference', 'montant', 'texte', 'email');
+    for ($i = 0; $i < count($aRequiredDatas); $i++)
+      if (!array_key_exists($aRequiredDatas[$i], $params))
+        die ("Erreur paramètre " . $aRequiredDatas[$i] . " indéfini");
   }
 }

@@ -8,10 +8,10 @@ class PaymentServiceProvider extends ServiceProvider{
   protected $defer = true;
 
   public function register() {
-    $this->app->bind('PaymentInterface', 'Dorianboulch\Cmcicpayment\PaymentManager');
+    $this->app->bind('Dorianboulch\Cmcicpayment\PaymentInterface', 'Dorianboulch\Cmcicpayment\PaymentManager');
   }
 
   public function provides(){
-    return ['PaymentInterface'];
+    return ['Dorianboulch\Cmcicpayment\PaymentInterface'];
   }
 }

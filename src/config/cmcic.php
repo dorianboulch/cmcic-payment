@@ -12,7 +12,7 @@ return [
         'SERVEUR'     => 'https://ssl.paiement.cic-banques.fr/test/',
         'URLPAIEMENT' => 'paiement.cgi',
         'CODESOCIETE' => '0000000',
-        'URLOK'       => 'http://test.test/testOk',
-        'URLKO'       => 'http://test.test/testKO'
+        'URLOK'       => 'named.route.ok', //laravel route
+        'URLKO'       => 'named.route.ko' //laravel route
     ]
 ];
