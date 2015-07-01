@@ -40,6 +40,8 @@ class PaymentManager implements PaymentInterface {
 
   private $sMac;
 
+  private $orderData;
+
   public function create(Array $param) {
     $configCmcic = app()['config']['cmcic']['CMCIC'];
     $configTpe   = app()['config']['cmcic']['TPE'];
@@ -145,5 +147,54 @@ class PaymentManager implements PaymentInterface {
     for ($i = 0; $i < count($aRequiredDatas); $i++)
       if (!array_key_exists($aRequiredDatas[$i], $params))
         die ("Erreur paramètre " . $aRequiredDatas[$i] . " indéfini");
+  }
+
+  public function processServerReturn() {
+    $this->orderData = getMethode();
+
+    $configTpe   = app()['config']['cmcic']['TPE'];
+
+    $this->oTpe  = new CMCIC_Tpe($configTpe);
+    $this->oHmac = new CMCIC_Hmac($this->oTpe);
+
+    $cgi2_fields = sprintf($this->cmcicCgi2Fields, $this->oTpe->sNumero,
+        $this->orderData["date"],
+        $this->orderData['montant'],
+        $this->orderData['reference'],
+        $this->orderData['texte-libre'],
+        $this->oTpe->sVersion,
+        $this->orderData['code-retour'],
+        $this->orderData['cvx'],
+        $this->orderData['vld'],
+        $this->orderData['brand'],
+        $this->orderData['status3ds'],
+        $this->orderData['numauto'],
+        $this->orderData['motifrefus'],
+        $this->orderData['originecb'],
+        $this->orderData['bincb'],
+        $this->orderData['hpancb'],
+        $this->orderData['ipclient'],
+        $this->orderData['originetr'],
+        $this->orderData['veres'],
+        $this->orderData['pares']
+    );
+
+    if ($this->oHmac->computeHmac($cgi2_fields) == strtolower($this->orderData['MAC'])){
+      $dataValid = true;
+      $receipt = $this->cmcicCgi2MacOk;
+    }else{
+      $dataValid = false;
+      $receipt = $this->cmcicCgi2MacNotOk.$cgi2_fields;
+    }
+    $toPrint = sprintf ($this->cmcicCgi2Receipt, $receipt);
+
+    return [
+      'dataValid' => $dataValid,
+      'toPrint' => $toPrint
+    ];
+  }
+
+  public function getOrderDatas() {
+    return $this->orderData;
   }
 }

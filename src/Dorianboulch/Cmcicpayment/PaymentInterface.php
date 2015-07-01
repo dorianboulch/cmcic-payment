@@ -9,4 +9,6 @@ interface PaymentInterface {
   public function openForm();
   public function getInputs();
   public function closeForm();
+  public function processServerReturn();
+  public function getOrderDatas();
 }
