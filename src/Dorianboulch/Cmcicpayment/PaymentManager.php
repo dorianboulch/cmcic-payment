@@ -157,36 +157,61 @@ class PaymentManager implements PaymentInterface {
     $this->oTpe  = new CMCIC_Tpe($configTpe);
     $this->oHmac = new CMCIC_Hmac($this->oTpe);
 
-    $cgi2_fields = sprintf($this->cmcicCgi2Fields, $this->oTpe->sNumero,
-        $this->orderData["date"],
-        $this->orderData['montant'],
-        $this->orderData['reference'],
-        $this->orderData['texte-libre'],
-        $this->oTpe->sVersion,
-        $this->orderData['code-retour'],
-        $this->orderData['cvx'],
-        $this->orderData['vld'],
-        $this->orderData['brand'],
-        $this->orderData['status3ds'],
-        $this->orderData['numauto'],
-        $this->orderData['motifrefus'],
-        $this->orderData['originecb'],
-        $this->orderData['bincb'],
-        $this->orderData['hpancb'],
-        $this->orderData['ipclient'],
-        $this->orderData['originetr'],
-        $this->orderData['veres'],
-        $this->orderData['pares']
-    );
+    if(
+        isset($this->orderData['date']) &&
+        isset($this->orderData['reference']) &&
+        isset($this->orderData['reference']) &&
+        isset($this->orderData['texte-libre']) &&
+        isset($this->orderData['code-retour']) &&
+        isset($this->orderData['cvx']) &&
+        isset($this->orderData['vld']) &&
+        isset($this->orderData['brand']) &&
+        isset($this->orderData['status3ds']) &&
+        isset($this->orderData['numauto']) &&
+        isset($this->orderData['motifrefus']) &&
+        isset($this->orderData['originecb']) &&
+        isset($this->orderData['bincb']) &&
+        isset($this->orderData['hpancb']) &&
+        isset($this->orderData['ipclient']) &&
+        isset($this->orderData['originetr']) &&
+        isset($this->orderData['veres']) &&
+        isset($this->orderData['pares'])
+      ){
 
-    if ($this->oHmac->computeHmac($cgi2_fields) == strtolower($this->orderData['MAC'])){
-      $dataValid = true;
-      $receipt = $this->cmcicCgi2MacOk;
+      $cgi2_fields = sprintf($this->cmcicCgi2Fields, $this->oTpe->sNumero,
+          $this->orderData['date'],
+          $this->orderData['montant'],
+          $this->orderData['reference'],
+          $this->orderData['texte-libre'],
+          $this->oTpe->sVersion,
+          $this->orderData['code-retour'],
+          $this->orderData['cvx'],
+          $this->orderData['vld'],
+          $this->orderData['brand'],
+          $this->orderData['status3ds'],
+          $this->orderData['numauto'],
+          $this->orderData['motifrefus'],
+          $this->orderData['originecb'],
+          $this->orderData['bincb'],
+          $this->orderData['hpancb'],
+          $this->orderData['ipclient'],
+          $this->orderData['originetr'],
+          $this->orderData['veres'],
+          $this->orderData['pares']
+      );
+
+      if ($this->oHmac->computeHmac($cgi2_fields) == strtolower($this->orderData['MAC'])){
+        $dataValid = true;
+        $receipt   = $this->cmcicCgi2MacOk;
+      }else{
+        $dataValid = false;
+        $receipt   = $this->cmcicCgi2MacNotOk.$cgi2_fields;
+      }
+      $toPrint = sprintf ($this->cmcicCgi2Receipt, $receipt);
     }else{
       $dataValid = false;
-      $receipt = $this->cmcicCgi2MacNotOk.$cgi2_fields;
+      $toPrint   = 'Error data not received';
     }
-    $toPrint = sprintf ($this->cmcicCgi2Receipt, $receipt);
 
     return [
       'dataValid' => $dataValid,
