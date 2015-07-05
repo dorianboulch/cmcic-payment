@@ -159,7 +159,7 @@ class PaymentManager implements PaymentInterface {
 
     if(
         isset($this->orderData['date']) &&
-        isset($this->orderData['reference']) &&
+        isset($this->orderData['montant']) &&
         isset($this->orderData['reference']) &&
         isset($this->orderData['texte-libre']) &&
         isset($this->orderData['code-retour']) &&
