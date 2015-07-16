@@ -205,7 +205,7 @@ class PaymentManager implements PaymentInterface {
         $receipt   = $this->cmcicCgi2MacOk;
       }else{
         $dataValid = false;
-        $receipt   = $this->cmcicCgi2MacNotOk.$cgi2_fields;
+        $receipt   = $this->cmcicCgi2MacNotOk;
       }
       $toPrint = sprintf ($this->cmcicCgi2Receipt, $receipt);
     }else{
