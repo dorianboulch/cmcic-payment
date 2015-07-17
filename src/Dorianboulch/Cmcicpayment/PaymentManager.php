@@ -158,6 +158,7 @@ class PaymentManager implements PaymentInterface {
     $this->oHmac = new CMCIC_Hmac($this->oTpe);
 
     if(
+        isset($this->orderData['MAC']) &&
         isset($this->orderData['date']) &&
         isset($this->orderData['montant']) &&
         isset($this->orderData['reference']) &&
@@ -168,7 +169,6 @@ class PaymentManager implements PaymentInterface {
         isset($this->orderData['brand']) &&
         isset($this->orderData['status3ds']) &&
         isset($this->orderData['numauto']) &&
-        isset($this->orderData['motifrefus']) &&
         isset($this->orderData['originecb']) &&
         isset($this->orderData['bincb']) &&
         isset($this->orderData['hpancb']) &&
@@ -177,6 +177,9 @@ class PaymentManager implements PaymentInterface {
         isset($this->orderData['veres']) &&
         isset($this->orderData['pares'])
       ){
+	  if(!isset($this->orderData['motifrefus'])){
+		  $this->orderData['motifrefus'] = '';
+	  }
 
       $cgi2_fields = sprintf($this->cmcicCgi2Fields, $this->oTpe->sNumero,
           $this->orderData['date'],
