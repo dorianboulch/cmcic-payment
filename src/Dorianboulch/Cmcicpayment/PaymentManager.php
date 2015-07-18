@@ -12,7 +12,7 @@ class PaymentManager implements PaymentInterface {
   private $cmcicCtlHmac = "V1.04.sha1.php--[CtlHmac%s%s]-%s";
   private $cmcicCtlHmacStr = "CtlHmac%s%s";
   private $cmcicCgi2Receipt = "version=2\ncdr=%s";
-  private $cmcicCgi2MacOk = "0";
+  private $cmcicCgi2MacOk = "0\n";
   private $cmcicCgi2MacNotOk = "1\n";
   private $cmcicCgi2Fields = "%s*%s*%s*%s*%s*%s*%s*%s*%s*%s*%s*%s*%s*%s*%s*%s*%s*%s*%s*%s*";
   private $cmcicCgi1Fields = "%s*%s*%s%s*%s*%s*%s*%s*%s*%s*%s*%s*%s*%s*%s*%s*%s*%s*%s*%s";
